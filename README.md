@@ -18,3 +18,24 @@ Gli step di base per l'utilizzo del framework sono i seguenti:
 
 Questa granularità nella scelta di combinazioni tra payloads è uno dei principali punti di forza di Metasploit. Il framework è interamente scritto in Ruby e esegue su qualunque macchina *nix (ad esempio MacOS, OpenBSD e Linux). 
 Uno dei passaggi principali è la scelta del particolare exploit, per fare ciò è importante ottenere informazioni sulla macchina target. A tale scopo si utilizzano spesso tool di scanning e fingerprinting quali Nmap. Inoltre è possibile importare nel framework i risulati di alcuni dei più noti vulnerability scanners, come Nessus e OpenVAS.
+
+## Installazione
+
+Il framework è installato di default su tutte le distribuzioni kali linux, che è poi l'ambiente (virtualizzato) che utilizzeremo per i nostri test, ma nel caso si voglia installare manualmente di seguito sono elencati i comandi per MacOS/Linux.
+
+```
+curl https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb > msfinstall
+chmod 755 msfinstall
+./msfinstall
+```
+
+Dopo l'installazione si può lanciare il programma con il comando ` /opt/metasploit-framework/bin/msfconsole ` che nella sua prima esecuzione permetterà di inserire il percorso nella variabile PATH locale.
+
+## Metasploitable
+
+Una volta settato l'ambiente d'attacco è il momento di cercare qualcosa da attaccare! \'E però bene rendersi conto che Metasploit ha delle potenzialità enormi e con esse anche enormi potenzialità di creare danni, è perciò bene utilizzare Metasploit, specialmente per fini didattici, in una rete chiusa e con una macchina target fantoccio. A questo scopo viene in nostro aiuto lo stesso team Rapid7, che fornisce la macchina virtuale __Metasploitable__ che, come suggerisce il nome, è una macchina intenzionalmente vulnerabile e che spone una vasta gamma di servizi sulla rete.
+Metasploitable è una macchina virtuale VMware ottenibile su [SourceForge](https://sourceforge.net/projects/metasploitable/).
+
+## Definizione dell'ambiente d'attacco
+
+## Lista degli attacchi
