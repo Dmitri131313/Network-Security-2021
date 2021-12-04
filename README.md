@@ -4,3 +4,17 @@ Progetto per l'esame di Network Security A.A. 2021-2022
 Gruppo Pisano-Poziello-Ruggiero
 
 ## Il framework Metasploit e applicazioni
+
+Il __Metasploit Project__ è un progetto di sicurezza informatica che si propone di offrire informazioni circa le vulnerabilità di sicurezza e di aiutare nel penetration testing. Il sottoprogetto __Metasploit Framework__, che è quello che andremo ad utilizzare in questo lavoro, è uno strumento pensato per lo sviluppo ed esecuzione di _ _exploit_ _ verso una macchina remota target. Nel framework sono inoltre inclusi un database di payloads e dei tool di assistenza allo sviluppo degli attacchi.
+Negli ultimi anni il progetto Metasploit si è rivelato essere lo standard de facto per lo sviluppo degli exploit, e pertanto ha guadagnato molto supporto dalla comunità della sicurezza, che ha contribuito con moduli che evidenziano le vulnerabilità di un particolare bug.
+
+Gli step di base per l'utilizzo del framework sono i seguenti:
+
+1. (Opzionale) Controllo delle vulnerabilità sul sistema target.
+2. Scelta e configurazione di un particolare exploit, che in questo contesto sottende codice che verrà iniettato nella macchina target per mezzo di una particolare vulnerabilità, di default sono presenti più di 2000 exploit per tutti i principali sistemi operativi.
+3. Scelta e configurazione di un _ _payload_ _ , codice che verrà eseguito sulla macchina target in seguito alla riuscita dell'exploit, esempi tipici sono l'esecuzione di una shell o di un server VNC.
+4. Scelta della tecnica di encoding degli opcode esadecimali al fine di garantire la riuscita dell'exploit.
+5. Esecuzione dell'exploit
+
+Questa granularità nella scelta di combinazioni tra payloads è uno dei principali punti di forza di Metasploit. Il framework è interamente scritto in Ruby e esegue su qualunque macchina *nix (ad esempio MacOS, OpenBSD e Linux). 
+Uno dei passaggi principali è la scelta del particolare exploit, per fare ciò è importante ottenere informazioni sulla macchina target. A tale scopo si utilizzano spesso tool di scanning e fingerprinting quali Nmap. Inoltre è possibile importare nel framework i risulati di alcuni dei più noti vulnerability scanners, come Nessus e OpenVAS.
