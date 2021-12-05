@@ -59,7 +59,7 @@ Verifichiamo la presenza della macchina sulla rete locale dell'attaccante kali c
 
 
 ```
-nmap -sn -T5 192.168.xxx.0/24 | grep for | cut -d " " -f5
+nmap -sn -T5 192.168.56.0/24 | grep for | cut -d " " -f5
 ```
 
 Vediamo il significato delle opzioni:
@@ -69,7 +69,318 @@ Vediamo il significato delle opzioni:
 
 ![nmap](/imgs/nmap.png)
 
+Da queso output determiniamo che la macchina target ha indirizzo `192.168.56.102`, dato che l'indirizzo 101 è la macchina locale, l'indirizzo 100 è il server DHCP e l'indirizzo 1 è la macchina host. a questo punto possiamo iniziare una fase di port scanning sulla macchina metasploitable con il comando
 
+```
+nmap 192.168.56.102 -v --open --reason -p-
+```
 
+- __v__: modalità verbosa.
+- __open__: Cerco solo porte attive, non quelle ad esempio chiuse o filtrate.
+- __reason__: Mostra la ragione per cui la porta si trova in un determinato stato.
+- __p-__: Scansione di tutte le porte.
+
+L'output del comando è il seguente:
+
+```
+Starting Nmap 7.91 ( https://nmap.org ) at 2021-12-05 15:50 EST
+Initiating Ping Scan at 15:50
+Scanning 192.168.56.102 [2 ports]
+Completed Ping Scan at 15:50, 0.00s elapsed (1 total hosts)
+mass_dns: warning: Unable to determine any DNS servers. Reverse DNS is disabled. Try using --system-dns or specify valid servers with --dns-servers
+Initiating Connect Scan at 15:50
+Scanning 192.168.56.102 [65535 ports]
+Discovered open port 111/tcp on 192.168.56.102
+Discovered open port 80/tcp on 192.168.56.102
+Discovered open port 3306/tcp on 192.168.56.102
+Discovered open port 445/tcp on 192.168.56.102
+Discovered open port 53/tcp on 192.168.56.102
+Discovered open port 23/tcp on 192.168.56.102
+Discovered open port 5900/tcp on 192.168.56.102
+Discovered open port 22/tcp on 192.168.56.102
+Discovered open port 25/tcp on 192.168.56.102
+Discovered open port 139/tcp on 192.168.56.102
+Discovered open port 21/tcp on 192.168.56.102
+Discovered open port 48903/tcp on 192.168.56.102
+Discovered open port 512/tcp on 192.168.56.102
+Discovered open port 514/tcp on 192.168.56.102
+Discovered open port 2049/tcp on 192.168.56.102
+Discovered open port 1524/tcp on 192.168.56.102
+Discovered open port 513/tcp on 192.168.56.102
+Discovered open port 56957/tcp on 192.168.56.102
+Discovered open port 2121/tcp on 192.168.56.102
+Discovered open port 8180/tcp on 192.168.56.102
+Discovered open port 38712/tcp on 192.168.56.102
+Discovered open port 6667/tcp on 192.168.56.102
+Discovered open port 39328/tcp on 192.168.56.102
+Discovered open port 6697/tcp on 192.168.56.102
+Discovered open port 3632/tcp on 192.168.56.102
+Discovered open port 1099/tcp on 192.168.56.102
+Discovered open port 6000/tcp on 192.168.56.102
+Discovered open port 8009/tcp on 192.168.56.102
+Discovered open port 8787/tcp on 192.168.56.102
+Discovered open port 5432/tcp on 192.168.56.102
+Completed Connect Scan at 15:50, 2.52s elapsed (65535 total ports)
+Nmap scan report for 192.168.56.102
+Host is up, received syn-ack (0.00027s latency).
+Not shown: 65505 closed ports
+Reason: 65505 conn-refused
+PORT      STATE SERVICE      REASON
+21/tcp    open  ftp          syn-ack
+22/tcp    open  ssh          syn-ack
+23/tcp    open  telnet       syn-ack
+25/tcp    open  smtp         syn-ack
+53/tcp    open  domain       syn-ack
+80/tcp    open  http         syn-ack
+111/tcp   open  rpcbind      syn-ack
+139/tcp   open  netbios-ssn  syn-ack
+445/tcp   open  microsoft-ds syn-ack
+512/tcp   open  exec         syn-ack
+513/tcp   open  login        syn-ack
+514/tcp   open  shell        syn-ack
+1099/tcp  open  rmiregistry  syn-ack
+1524/tcp  open  ingreslock   syn-ack
+2049/tcp  open  nfs          syn-ack
+2121/tcp  open  ccproxy-ftp  syn-ack
+3306/tcp  open  mysql        syn-ack
+3632/tcp  open  distccd      syn-ack
+5432/tcp  open  postgresql   syn-ack
+5900/tcp  open  vnc          syn-ack
+6000/tcp  open  X11          syn-ack
+6667/tcp  open  irc          syn-ack
+6697/tcp  open  ircs-u       syn-ack
+8009/tcp  open  ajp13        syn-ack
+8180/tcp  open  unknown      syn-ack
+8787/tcp  open  msgsrvr      syn-ack
+38712/tcp open  unknown      syn-ack
+39328/tcp open  unknown      syn-ack
+48903/tcp open  unknown      syn-ack
+56957/tcp open  unknown      syn-ack
+
+Read data files from: /usr/bin/../share/nmap
+Nmap done: 1 IP address (1 host up) scanned in 2.70 seconds
+```
+
+Queste informazioni ci sono sicuramente molto utili, ma a questo punto andiamo ancora più nel dettaglio andando a fare enumeration su ogni singola porta aperta
+
+```
+nmap 192.168.XXX.XXX -v -sV -sC -p 21,22,23,25,53,80,111,139,445,512,513,514,1099,1524,2049,2121,3306,3632,5432,5900,6000,6667,6697,8009,8180,8787,36944,38918,54477,58406
+```
+
+- __sV__: Effettua il banner grabbing.
+- __sC__: Utilizza il set di script di default per fare enumeration.
+
+```
+Starting Nmap 7.91 ( https://nmap.org ) at 2021-12-05 15:58 EST
+NSE: Loaded 153 scripts for scanning.
+NSE: Script Pre-scanning.
+Initiating NSE at 15:58
+Completed NSE at 15:58, 0.00s elapsed
+Initiating NSE at 15:58
+Completed NSE at 15:58, 0.00s elapsed
+Initiating NSE at 15:58
+Completed NSE at 15:58, 0.00s elapsed
+Initiating ARP Ping Scan at 15:58
+Scanning 192.168.56.102 [1 port]
+Completed ARP Ping Scan at 15:58, 0.11s elapsed (1 total hosts)
+mass_dns: warning: Unable to determine any DNS servers. Reverse DNS is disabled. Try using --system-dns or specify valid servers with --dns-servers
+Initiating SYN Stealth Scan at 15:58
+Scanning 192.168.56.102 [30 ports]
+Discovered open port 445/tcp on 192.168.56.102
+Discovered open port 22/tcp on 192.168.56.102
+Discovered open port 111/tcp on 192.168.56.102
+Discovered open port 25/tcp on 192.168.56.102
+Discovered open port 53/tcp on 192.168.56.102
+Discovered open port 21/tcp on 192.168.56.102
+Discovered open port 23/tcp on 192.168.56.102
+Discovered open port 80/tcp on 192.168.56.102
+Discovered open port 139/tcp on 192.168.56.102
+Discovered open port 3306/tcp on 192.168.56.102
+Discovered open port 5900/tcp on 192.168.56.102
+Discovered open port 8180/tcp on 192.168.56.102
+Discovered open port 8787/tcp on 192.168.56.102
+Discovered open port 6000/tcp on 192.168.56.102
+Discovered open port 3632/tcp on 192.168.56.102
+Discovered open port 2121/tcp on 192.168.56.102
+Discovered open port 8009/tcp on 192.168.56.102
+Discovered open port 6697/tcp on 192.168.56.102
+Discovered open port 5432/tcp on 192.168.56.102
+Discovered open port 512/tcp on 192.168.56.102
+Discovered open port 514/tcp on 192.168.56.102
+Discovered open port 1524/tcp on 192.168.56.102
+Discovered open port 2049/tcp on 192.168.56.102
+Discovered open port 1099/tcp on 192.168.56.102
+Discovered open port 6667/tcp on 192.168.56.102
+Discovered open port 513/tcp on 192.168.56.102
+Completed SYN Stealth Scan at 15:58, 0.05s elapsed (30 total ports)
+Initiating Service scan at 15:58
+Scanning 26 services on 192.168.56.102
+Completed Service scan at 15:58, 11.32s elapsed (26 services on 1 host)
+NSE: Script scanning 192.168.56.102.
+Initiating NSE at 15:58
+NSE: [ftp-bounce] Couldn't resolve scanme.nmap.org, scanning 10.0.0.1 instead.
+NSE: [ftp-bounce] PORT response: 500 Illegal PORT command.
+Completed NSE at 15:58, 8.73s elapsed
+Initiating NSE at 15:58
+Completed NSE at 15:58, 0.29s elapsed
+Initiating NSE at 15:58
+Completed NSE at 15:58, 0.00s elapsed
+Nmap scan report for 192.168.56.102
+Host is up (0.00057s latency).
+
+PORT      STATE  SERVICE     VERSION
+21/tcp    open   ftp         vsftpd 2.3.4
+|_ftp-anon: Anonymous FTP login allowed (FTP code 230)
+| ftp-syst: 
+|   STAT: 
+| FTP server status:
+|      Connected to 192.168.56.101
+|      Logged in as ftp
+|      TYPE: ASCII
+|      No session bandwidth limit
+|      Session timeout in seconds is 300
+|      Control connection is plain text
+|      Data connections will be plain text
+|      vsFTPd 2.3.4 - secure, fast, stable
+|_End of status
+22/tcp    open   ssh         OpenSSH 4.7p1 Debian 8ubuntu1 (protocol 2.0)
+| ssh-hostkey: 
+|   1024 60:0f:cf:e1:c0:5f:6a:74:d6:90:24:fa:c4:d5:6c:cd (DSA)
+|_  2048 56:56:24:0f:21:1d:de:a7:2b:ae:61:b1:24:3d:e8:f3 (RSA)
+23/tcp    open   telnet      Linux telnetd
+25/tcp    open   smtp        Postfix smtpd
+|_smtp-commands: metasploitable.localdomain, PIPELINING, SIZE 10240000, VRFY, ETRN, STARTTLS, ENHANCEDSTATUSCODES, 8BITMIME, DSN, 
+| ssl-cert: Subject: commonName=ubuntu804-base.localdomain/organizationName=OCOSA/stateOrProvinceName=There is no such thing outside US/countryName=XX
+| Issuer: commonName=ubuntu804-base.localdomain/organizationName=OCOSA/stateOrProvinceName=There is no such thing outside US/countryName=XX
+| Public Key type: rsa
+| Public Key bits: 1024
+| Signature Algorithm: sha1WithRSAEncryption
+| Not valid before: 2010-03-17T14:07:45
+| Not valid after:  2010-04-16T14:07:45
+| MD5:   dcd9 ad90 6c8f 2f73 74af 383b 2540 8828
+|_SHA-1: ed09 3088 7066 03bf d5dc 2373 99b4 98da 2d4d 31c6
+|_ssl-date: 2021-12-05T20:32:36+00:00; -25m48s from scanner time.
+| sslv2: 
+|   SSLv2 supported
+|   ciphers: 
+|     SSL2_RC4_128_EXPORT40_WITH_MD5
+|     SSL2_RC4_128_WITH_MD5
+|     SSL2_RC2_128_CBC_WITH_MD5
+|     SSL2_DES_192_EDE3_CBC_WITH_MD5
+|     SSL2_DES_64_CBC_WITH_MD5
+|_    SSL2_RC2_128_CBC_EXPORT40_WITH_MD5
+53/tcp    open   domain      ISC BIND 9.4.2
+| dns-nsid: 
+|_  bind.version: 9.4.2
+80/tcp    open   http        Apache httpd 2.2.8 ((Ubuntu) DAV/2)
+| http-methods: 
+|_  Supported Methods: GET HEAD POST OPTIONS
+|_http-server-header: Apache/2.2.8 (Ubuntu) DAV/2
+|_http-title: Metasploitable2 - Linux
+111/tcp   open   rpcbind     2 (RPC #100000)
+| rpcinfo: 
+|   program version    port/proto  service
+|   100000  2            111/tcp   rpcbind
+|   100000  2            111/udp   rpcbind
+|   100003  2,3,4       2049/tcp   nfs
+|   100003  2,3,4       2049/udp   nfs
+|   100005  1,2,3      35803/udp   mountd
+|   100005  1,2,3      38712/tcp   mountd
+|   100021  1,3,4      38316/udp   nlockmgr
+|   100021  1,3,4      56957/tcp   nlockmgr
+|   100024  1          39328/tcp   status
+|_  100024  1          40046/udp   status
+139/tcp   open   netbios-ssn Samba smbd 3.X - 4.X (workgroup: WORKGROUP)
+445/tcp   open   netbios-ssn Samba smbd 3.0.20-Debian (workgroup: WORKGROUP)
+512/tcp   open   exec        netkit-rsh rexecd
+513/tcp   open   login       OpenBSD or Solaris rlogind
+514/tcp   open   shell       Netkit rshd
+1099/tcp  open   java-rmi    GNU Classpath grmiregistry
+1524/tcp  open   bindshell   Metasploitable root shell
+2049/tcp  open   nfs         2-4 (RPC #100003)
+2121/tcp  open   ftp         ProFTPD 1.3.1
+3306/tcp  open   mysql       MySQL 5.0.51a-3ubuntu5
+| mysql-info: 
+|   Protocol: 10
+|   Version: 5.0.51a-3ubuntu5
+|   Thread ID: 10
+|   Capabilities flags: 43564
+|   Some Capabilities: Speaks41ProtocolNew, SupportsTransactions, ConnectWithDatabase, SwitchToSSLAfterHandshake, Support41Auth, LongColumnFlag, SupportsCompression
+|   Status: Autocommit
+|_  Salt: 0YQh9"=LF[vbh`-\ht01
+3632/tcp  open   distccd     distccd v1 ((GNU) 4.2.4 (Ubuntu 4.2.4-1ubuntu4))
+5432/tcp  open   postgresql  PostgreSQL DB 8.3.0 - 8.3.7
+| ssl-cert: Subject: commonName=ubuntu804-base.localdomain/organizationName=OCOSA/stateOrProvinceName=There is no such thing outside US/countryName=XX
+| Issuer: commonName=ubuntu804-base.localdomain/organizationName=OCOSA/stateOrProvinceName=There is no such thing outside US/countryName=XX
+| Public Key type: rsa
+| Public Key bits: 1024
+| Signature Algorithm: sha1WithRSAEncryption
+| Not valid before: 2010-03-17T14:07:45
+| Not valid after:  2010-04-16T14:07:45
+| MD5:   dcd9 ad90 6c8f 2f73 74af 383b 2540 8828
+|_SHA-1: ed09 3088 7066 03bf d5dc 2373 99b4 98da 2d4d 31c6
+|_ssl-date: 2021-12-05T20:32:36+00:00; -25m48s from scanner time.
+5900/tcp  open   vnc         VNC (protocol 3.3)
+| vnc-info: 
+|   Protocol version: 3.3
+|   Security types: 
+|_    VNC Authentication (2)
+6000/tcp  open   X11         (access denied)
+6667/tcp  open   irc         UnrealIRCd
+6697/tcp  open   irc         UnrealIRCd
+8009/tcp  open   ajp13       Apache Jserv (Protocol v1.3)
+|_ajp-methods: Failed to get a valid response for the OPTION request
+8180/tcp  open   http        Apache Tomcat/Coyote JSP engine 1.1
+|_http-favicon: Apache Tomcat
+| http-methods: 
+|_  Supported Methods: GET HEAD POST OPTIONS
+|_http-server-header: Apache-Coyote/1.1
+|_http-title: Apache Tomcat/5.5
+8787/tcp  open   drb         Ruby DRb RMI (Ruby 1.8; path /usr/lib/ruby/1.8/drb)
+36944/tcp closed unknown
+38918/tcp closed unknown
+54477/tcp closed unknown
+58406/tcp closed unknown
+MAC Address: 08:00:27:2B:A5:D0 (Oracle VirtualBox virtual NIC)
+Service Info: Hosts:  metasploitable.localdomain, irc.Metasploitable.LAN; OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel
+
+Host script results:
+|_clock-skew: mean: 49m12s, deviation: 2h30m00s, median: -25m48s
+| nbstat: NetBIOS name: METASPLOITABLE, NetBIOS user: <unknown>, NetBIOS MAC: <unknown> (unknown)
+| Names:
+|   METASPLOITABLE<00>   Flags: <unique><active>
+|   METASPLOITABLE<03>   Flags: <unique><active>
+|   METASPLOITABLE<20>   Flags: <unique><active>
+|   \x01\x02__MSBROWSE__\x02<01>  Flags: <group><active>
+|   WORKGROUP<00>        Flags: <group><active>
+|   WORKGROUP<1d>        Flags: <unique><active>
+|_  WORKGROUP<1e>        Flags: <group><active>
+| smb-os-discovery: 
+|   OS: Unix (Samba 3.0.20-Debian)
+|   Computer name: metasploitable
+|   NetBIOS computer name: 
+|   Domain name: localdomain
+|   FQDN: metasploitable.localdomain
+|_  System time: 2021-12-05T15:32:28-05:00
+| smb-security-mode: 
+|   account_used: <blank>
+|   authentication_level: user
+|   challenge_response: supported
+|_  message_signing: disabled (dangerous, but default)
+|_smb2-time: Protocol negotiation failed (SMB2)
+
+NSE: Script Post-scanning.
+Initiating NSE at 15:58
+Completed NSE at 15:58, 0.00s elapsed
+Initiating NSE at 15:58
+Completed NSE at 15:58, 0.00s elapsed
+Initiating NSE at 15:58
+Completed NSE at 15:58, 0.00s elapsed
+Read data files from: /usr/bin/../share/nmap
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 21.40 seconds
+           Raw packets sent: 31 (1.348KB) | Rcvd: 31 (1.332KB)
+
+```
 
 ## Lista degli attacchi
