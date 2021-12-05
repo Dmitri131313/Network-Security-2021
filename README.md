@@ -41,15 +41,21 @@ Metasploitable è una macchina virtuale VMware ottenibile su [SourceForge](https
 L'ambiente in cui condurremo i nostri test sarà un ambiente virtualizzato. Metasploit eseguirà su una macchina kali ottenuta a partire dalla ultima [ISO stabile](https://www.kali.org/get-kali/). La configurazione di rete sarà di tipo host-only. In questo tipo di configurazione la VM non utlizza la scheda di rete dell'host, bensì una scheda di rete virtuale creata ad hoc da VirtualBox (o da qualunque software di virtualizzazione). Questa scheda di rete virtuale permette la connessione tra sistema host e VM, inoltre permette la comunicazione tra VM. Questa scheda di rete virtuale fornisce anche la funzionalità di server DHCP, andando ad assegnare gli indirizzi ai vari endpoint della rete. In questa configurazione i sistemi guest non potranno quindi accedere all'esterno e quindi alla rete internet, ma possono comunicare tra di loro, che è proprio il comportamento auspicabile ai nostri scopi. 
 Vediamo velocemente come configurare la rete.
 
-- Selezionare __Host-only Adapter__ nella sezione __Network__ delle opzioni della VM ![Network settings](/imgs/network_settings.png)
+- Selezionare __Host-only Adapter__ nella sezione __Network__ delle opzioni della VM 
 
-- Nel caso non vi siano delle schede di rete virtuali nel menù a tendina precedenti bisogna andare a creare la scheda di rete dalle impostazioni. In VirtualBox andare in File->Host Network Manager, nel menù che si aprirà andare nella sezione Network, tab Host-only Networks, premere quindi l'icona con il simbolo +. Nello stesso menù si potrà inoltre andare a configurare le impostazioni dell'adapter, in particolare default gateway IP, maschera di sottorete, IP del server DHCP, range di indirizzi da assegnare. ![Network adapter](/imgs/network_adapter.png)
+![Network settings](/imgs/network_settings.png)
+
+- Nel caso non vi siano delle schede di rete virtuali nel menù a tendina precedenti bisogna andare a creare la scheda di rete dalle impostazioni. In VirtualBox andare in File->Host Network Manager, nel menù che si aprirà andare nella sezione Network, tab Host-only Networks, premere quindi l'icona con il simbolo +. Nello stesso menù si potrà inoltre andare a configurare le impostazioni dell'adapter, in particolare default gateway IP, maschera di sottorete, IP del server DHCP, range di indirizzi da assegnare. 
+
+![Network adapter](/imgs/network_adapter.png)
 
 A questo punto una volta configurata la VM kali per verificare che la rete sia configurata in maniera appropriata basta lanciare il comando `ifconfig` e accertarsi che l'indirizzo ip dell'interfaccia _eth0_ sia del tipo
 
 > 192.168.xxx.xxx
 
+
 ![ifconfig](/imgs/ifconfig.png)
+
 
 In maniera simile configuriamo la rete dell macchina Metasploitable e la avviamo, si presenta quindi così:
 
@@ -382,5 +388,7 @@ Nmap done: 1 IP address (1 host up) scanned in 21.40 seconds
            Raw packets sent: 31 (1.348KB) | Rcvd: 31 (1.332KB)
 
 ```
+
+Ci viene dunque presentata una lista di servizi aperti corredata dalla loro versione e da tutte le altre informazioni che nmap è riuscito a racimolare tramite i suoi script di enumeration di default.
 
 ## Lista degli attacchi
