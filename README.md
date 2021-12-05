@@ -43,7 +43,8 @@ Vediamo velocemente come configurare la rete.
 
 - Selezionare __Host-only Adapter__ nella sezione __Network__ delle opzioni della VM 
 
-![Network settings](/imgs/network_settings.png)
+<!-- ![Network settings](/imgs/network_settings.png) -->
+<img src="/imgs/network_settings.png" width="100" height="100">
 
 - Nel caso non vi siano delle schede di rete virtuali nel menù a tendina precedenti bisogna andare a creare la scheda di rete dalle impostazioni. In VirtualBox andare in File->Host Network Manager, nel menù che si aprirà andare nella sezione Network, tab Host-only Networks, premere quindi l'icona con il simbolo +. Nello stesso menù si potrà inoltre andare a configurare le impostazioni dell'adapter, in particolare default gateway IP, maschera di sottorete, IP del server DHCP, range di indirizzi da assegnare. 
 
