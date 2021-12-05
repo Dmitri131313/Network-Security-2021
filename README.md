@@ -51,9 +51,7 @@ Vediamo velocemente come configurare la rete.
 <!-- ![Network adapter](/imgs/network_adapter.png) -->
 <img src="/imgs/network_adapter.png" width="600"> </br>
 
-A questo punto una volta configurata la VM kali per verificare che la rete sia configurata in maniera appropriata basta lanciare il comando `ifconfig` e accertarsi che l'indirizzo ip dell'interfaccia _eth0_ sia del tipo
-
-> 192.168.xxx.xxx
+A questo punto una volta configurata la VM kali per verificare che la rete sia configurata in maniera appropriata basta lanciare il comando `ifconfig` e accertarsi che l'indirizzo ip dell'interfaccia _eth0_ sia del tipo `192.168.xxx.xxx`
 
 
 <!-- ![ifconfig](/imgs/ifconfig.png) -->
