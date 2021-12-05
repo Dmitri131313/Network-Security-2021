@@ -44,23 +44,26 @@ Vediamo velocemente come configurare la rete.
 - Selezionare __Host-only Adapter__ nella sezione __Network__ delle opzioni della VM 
 
 <!-- ![Network settings](/imgs/network_settings.png) -->
-<img src="/imgs/network_settings.png" width="100" height="100">
+<img src="/imgs/network_settings.png" width="600"> </br>
 
 - Nel caso non vi siano delle schede di rete virtuali nel menù a tendina precedenti bisogna andare a creare la scheda di rete dalle impostazioni. In VirtualBox andare in File->Host Network Manager, nel menù che si aprirà andare nella sezione Network, tab Host-only Networks, premere quindi l'icona con il simbolo +. Nello stesso menù si potrà inoltre andare a configurare le impostazioni dell'adapter, in particolare default gateway IP, maschera di sottorete, IP del server DHCP, range di indirizzi da assegnare. 
 
-![Network adapter](/imgs/network_adapter.png)
+<!-- ![Network adapter](/imgs/network_adapter.png) -->
+<img src="/imgs/network_adapter.png" width="600"> </br>
 
 A questo punto una volta configurata la VM kali per verificare che la rete sia configurata in maniera appropriata basta lanciare il comando `ifconfig` e accertarsi che l'indirizzo ip dell'interfaccia _eth0_ sia del tipo
 
 > 192.168.xxx.xxx
 
 
-![ifconfig](/imgs/ifconfig.png)
+<!-- ![ifconfig](/imgs/ifconfig.png) -->
+<img src="/imgs/ifconfig.png" width="600"> </br>
 
 
 In maniera simile configuriamo la rete dell macchina Metasploitable e la avviamo, si presenta quindi così:
 
-![metasploitable](/imgs/metasploitable.png)
+<!-- ![metasploitable](/imgs/metasploitable.png) -->
+<img src="/imgs/metasploitable.png" width="600"> </br>
 
 Verifichiamo la presenza della macchina sulla rete locale dell'attaccante kali con il seguente comando `nmap`
 
@@ -74,7 +77,8 @@ Vediamo il significato delle opzioni:
 - __sn__: ping sweep, tecnica di base per la mappatura di una rete che consiste nell'invio di messaggi ping ICMP ad un range di indirizzi.
 - __T5__: opzione di timing, il 5 indica la scelta di una mappatura più veloce possibile.
 
-![nmap](/imgs/nmap.png)
+<!-- ![nmap](/imgs/nmap.png) -->
+<img src="/imgs/nmap.png" width="600"> </br>
 
 Da queso output determiniamo che la macchina target ha indirizzo `192.168.56.102`, dato che l'indirizzo 101 è la macchina locale, l'indirizzo 100 è il server DHCP e l'indirizzo 1 è la macchina host. a questo punto possiamo iniziare una fase di port scanning sulla macchina metasploitable con il comando
 
@@ -84,7 +88,7 @@ nmap 192.168.56.102 -v --open --reason -p-
 
 - __v__: modalità verbosa.
 - __open__: Cerco solo porte attive, non quelle ad esempio chiuse o filtrate.
-- __reason__: Mostra la ragione per cui la porta si trova in un determinato stato.
+- __reason__: Mostra la ragione per cui nmap ha determinato lo stato della porta.
 - __p-__: Scansione di tutte le porte.
 
 L'output del comando è il seguente:
@@ -97,41 +101,9 @@ Completed Ping Scan at 15:50, 0.00s elapsed (1 total hosts)
 mass_dns: warning: Unable to determine any DNS servers. Reverse DNS is disabled. Try using --system-dns or specify valid servers with --dns-servers
 Initiating Connect Scan at 15:50
 Scanning 192.168.56.102 [65535 ports]
-Discovered open port 111/tcp on 192.168.56.102
-Discovered open port 80/tcp on 192.168.56.102
-Discovered open port 3306/tcp on 192.168.56.102
-Discovered open port 445/tcp on 192.168.56.102
-Discovered open port 53/tcp on 192.168.56.102
-Discovered open port 23/tcp on 192.168.56.102
-Discovered open port 5900/tcp on 192.168.56.102
-Discovered open port 22/tcp on 192.168.56.102
-Discovered open port 25/tcp on 192.168.56.102
-Discovered open port 139/tcp on 192.168.56.102
-Discovered open port 21/tcp on 192.168.56.102
-Discovered open port 48903/tcp on 192.168.56.102
-Discovered open port 512/tcp on 192.168.56.102
-Discovered open port 514/tcp on 192.168.56.102
-Discovered open port 2049/tcp on 192.168.56.102
-Discovered open port 1524/tcp on 192.168.56.102
-Discovered open port 513/tcp on 192.168.56.102
-Discovered open port 56957/tcp on 192.168.56.102
-Discovered open port 2121/tcp on 192.168.56.102
-Discovered open port 8180/tcp on 192.168.56.102
-Discovered open port 38712/tcp on 192.168.56.102
-Discovered open port 6667/tcp on 192.168.56.102
-Discovered open port 39328/tcp on 192.168.56.102
-Discovered open port 6697/tcp on 192.168.56.102
-Discovered open port 3632/tcp on 192.168.56.102
-Discovered open port 1099/tcp on 192.168.56.102
-Discovered open port 6000/tcp on 192.168.56.102
-Discovered open port 8009/tcp on 192.168.56.102
-Discovered open port 8787/tcp on 192.168.56.102
-Discovered open port 5432/tcp on 192.168.56.102
-Completed Connect Scan at 15:50, 2.52s elapsed (65535 total ports)
-Nmap scan report for 192.168.56.102
-Host is up, received syn-ack (0.00027s latency).
-Not shown: 65505 closed ports
-Reason: 65505 conn-refused
+
+[...]
+
 PORT      STATE SERVICE      REASON
 21/tcp    open  ftp          syn-ack
 22/tcp    open  ssh          syn-ack
@@ -164,8 +136,8 @@ PORT      STATE SERVICE      REASON
 48903/tcp open  unknown      syn-ack
 56957/tcp open  unknown      syn-ack
 
-Read data files from: /usr/bin/../share/nmap
-Nmap done: 1 IP address (1 host up) scanned in 2.70 seconds
+[...]
+
 ```
 
 Queste informazioni ci sono sicuramente molto utili, ma a questo punto andiamo ancora più nel dettaglio andando a fare enumeration su ogni singola porta aperta
@@ -181,59 +153,8 @@ nmap 192.168.XXX.XXX -v -sV -sC -p 21,22,23,25,53,80,111,139,445,512,513,514,109
 Starting Nmap 7.91 ( https://nmap.org ) at 2021-12-05 15:58 EST
 NSE: Loaded 153 scripts for scanning.
 NSE: Script Pre-scanning.
-Initiating NSE at 15:58
-Completed NSE at 15:58, 0.00s elapsed
-Initiating NSE at 15:58
-Completed NSE at 15:58, 0.00s elapsed
-Initiating NSE at 15:58
-Completed NSE at 15:58, 0.00s elapsed
-Initiating ARP Ping Scan at 15:58
-Scanning 192.168.56.102 [1 port]
-Completed ARP Ping Scan at 15:58, 0.11s elapsed (1 total hosts)
-mass_dns: warning: Unable to determine any DNS servers. Reverse DNS is disabled. Try using --system-dns or specify valid servers with --dns-servers
-Initiating SYN Stealth Scan at 15:58
-Scanning 192.168.56.102 [30 ports]
-Discovered open port 445/tcp on 192.168.56.102
-Discovered open port 22/tcp on 192.168.56.102
-Discovered open port 111/tcp on 192.168.56.102
-Discovered open port 25/tcp on 192.168.56.102
-Discovered open port 53/tcp on 192.168.56.102
-Discovered open port 21/tcp on 192.168.56.102
-Discovered open port 23/tcp on 192.168.56.102
-Discovered open port 80/tcp on 192.168.56.102
-Discovered open port 139/tcp on 192.168.56.102
-Discovered open port 3306/tcp on 192.168.56.102
-Discovered open port 5900/tcp on 192.168.56.102
-Discovered open port 8180/tcp on 192.168.56.102
-Discovered open port 8787/tcp on 192.168.56.102
-Discovered open port 6000/tcp on 192.168.56.102
-Discovered open port 3632/tcp on 192.168.56.102
-Discovered open port 2121/tcp on 192.168.56.102
-Discovered open port 8009/tcp on 192.168.56.102
-Discovered open port 6697/tcp on 192.168.56.102
-Discovered open port 5432/tcp on 192.168.56.102
-Discovered open port 512/tcp on 192.168.56.102
-Discovered open port 514/tcp on 192.168.56.102
-Discovered open port 1524/tcp on 192.168.56.102
-Discovered open port 2049/tcp on 192.168.56.102
-Discovered open port 1099/tcp on 192.168.56.102
-Discovered open port 6667/tcp on 192.168.56.102
-Discovered open port 513/tcp on 192.168.56.102
-Completed SYN Stealth Scan at 15:58, 0.05s elapsed (30 total ports)
-Initiating Service scan at 15:58
-Scanning 26 services on 192.168.56.102
-Completed Service scan at 15:58, 11.32s elapsed (26 services on 1 host)
-NSE: Script scanning 192.168.56.102.
-Initiating NSE at 15:58
-NSE: [ftp-bounce] Couldn't resolve scanme.nmap.org, scanning 10.0.0.1 instead.
-NSE: [ftp-bounce] PORT response: 500 Illegal PORT command.
-Completed NSE at 15:58, 8.73s elapsed
-Initiating NSE at 15:58
-Completed NSE at 15:58, 0.29s elapsed
-Initiating NSE at 15:58
-Completed NSE at 15:58, 0.00s elapsed
-Nmap scan report for 192.168.56.102
-Host is up (0.00057s latency).
+
+[...]
 
 PORT      STATE  SERVICE     VERSION
 21/tcp    open   ftp         vsftpd 2.3.4
@@ -376,17 +297,7 @@ Host script results:
 |_  message_signing: disabled (dangerous, but default)
 |_smb2-time: Protocol negotiation failed (SMB2)
 
-NSE: Script Post-scanning.
-Initiating NSE at 15:58
-Completed NSE at 15:58, 0.00s elapsed
-Initiating NSE at 15:58
-Completed NSE at 15:58, 0.00s elapsed
-Initiating NSE at 15:58
-Completed NSE at 15:58, 0.00s elapsed
-Read data files from: /usr/bin/../share/nmap
-Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-Nmap done: 1 IP address (1 host up) scanned in 21.40 seconds
-           Raw packets sent: 31 (1.348KB) | Rcvd: 31 (1.332KB)
+[...]
 
 ```
 
