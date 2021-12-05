@@ -63,7 +63,7 @@ In maniera simile configuriamo la rete dell macchina Metasploitable e la avviamo
 <!-- ![metasploitable](/imgs/metasploitable.png) -->
 <img src="/imgs/metasploitable.png" width="600"> </br>
 
-Verifichiamo la presenza della macchina sulla rete locale dell'attaccante kali con il seguente comando `nmap`
+Come il terminale suggerisce possiamo fare un login di default con le credenziali msfadmin/msfadmin, ma questo per il momento non è necessario. Verifichiamo la presenza della macchina sulla rete locale dell'attaccante kali con il seguente comando `nmap`
 
 
 ```
