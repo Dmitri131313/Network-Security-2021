@@ -38,4 +38,9 @@ Metasploitable è una macchina virtuale VMware ottenibile su [SourceForge](https
 
 ## Definizione dell'ambiente d'attacco
 
+L'ambiente in cui condurremo i nostri test sarà un ambiente virtualizzato. Metasploit eseguirà su una macchina kali ottenuta a partire dalla ultima [ISO stabile](https://www.kali.org/get-kali/). La configurazione di rete sarà di tipo host-only. In questo tipo di configurazione la VM non utlizza la scheda di rete dell'host, bensì una scheda di rete virtuale creata ad hoc da VirtualBox (o da qualunque software di virtualizzazione). Questa scheda di rete virtuale permette la connessione tra sistema host e VM, inoltre permette la comunicazione tra VM. Questa scheda di rete virtuale fornisce anche la funzionalità di server DHCP, andando ad assegnare gli indirizzi ai vari endpoint della rete. In questa configurazione i sistemi guest non potranno quindi accedere all'esterno e quindi alla rete internet, ma possono comunicare tra di loro, che è proprio il comportamento auspicabile ai nostri scopi. 
+Vediamo velocemente come configurare la rete.
+
+- Selezionare __Host-only Adapter__ nella sezione __Network__ delle opzioni della VM ![Network settings](/imgs/network_settings.png)
+
 ## Lista degli attacchi
