@@ -141,7 +141,7 @@ PORT      STATE SERVICE      REASON
 Queste informazioni ci sono sicuramente molto utili, ma a questo punto andiamo ancora più nel dettaglio andando a fare enumeration su ogni singola porta aperta
 
 ```
-nmap 192.168.XXX.XXX -v -sV -sC -p 21,22,23,25,53,80,111,139,445,512,513,514,1099,1524,2049,2121,3306,3632,5432,5900,6000,6667,6697,8009,8180,8787,36944,38918,54477,58406
+nmap 192.168.56.102 -v -sV -sC -p 21,22,23,25,53,80,111,139,445,512,513,514,1099,1524,2049,2121,3306,3632,5432,5900,6000,6667,6697,8009,8180,8787,36944,38918,54477,58406
 ```
 
 - __sV__: Effettua il banner grabbing.
@@ -304,3 +304,7 @@ Ci viene dunque presentata una lista di servizi aperti corredata dalla loro vers
 ## Lista degli attacchi
 
 - [FTP](ftp/)
+- [SSH](ssh/)
+- [TELNET](telnet/)
+- [SMTP](smtp/)
+- [HTTP](http/)
