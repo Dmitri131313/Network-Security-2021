@@ -136,7 +136,11 @@ Exploit target:
 Tra le opzioni del modulo troviamp __RHOSTS__, dove inseriremo l'ip del target e __RPORT__ dove inserire opzionalmente il porto del target, nel caso fosse diverso da 21. Per configurare l'ip basta digitare `set RHOSTS 192.168.56.102`. Per ottenere i payloads disponibili per il modulo digitiamo `show payloads`, in questo caso si nota che è presente un solo payload, che sarà ovviamente quello di default, pertanto non è necessaria nessuna ulteriore configurazione. A questo punto per lanciare l'attacco basta digitare il comando `exploit`.
 
 
-<img src="/imgs/vsftpd_exploit.png" width="600"> </br>
+<img src="/imgs/vsftpd_exploit.png" width="800"> </br>
+
+Siamo dunque entrati in possesso di una shell remota, in particolare sul porto 6200 e abbiamo inoltre i privilegi di amministratore come si nota dall'esecuzione del comando `whoami` e dal fatto che siamo riusciti a leggere il file protetto `/etc/passwd` contenente tutte le informazioni sugli utenti del sistema. Ultimo step che compieremo è quello di fare lo spawn di una shell interattiva bash tramite l'uso di python.
+
+<img src="/imgs/vsftpd_intshell.png" width="800"> </br>
 
 
 
