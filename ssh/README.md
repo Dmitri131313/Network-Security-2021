@@ -94,7 +94,7 @@ Facendo così otterremmo un classico attacco a forza bruta ma il problema sta pr
 msf6 auxiliary(scanner/ssh/ssh_login) > set USERNAME msfadmin
 USERNAME => msfadmin
 ```
-Questo username lo possiamo ottenere in diversi modi, uno dei quali è proprio l'attacco FTP visto precedentemente.
+Questo username lo possiamo ottenere in diversi modi, uno dei quali è proprio l'attacco FTP visto precedentemente oppure con l'SMTP enumeration che vedremo nella successiva sezione.
 
 <img src="/imgs/ssh_exploit.png" width="1000"> </br>
 

