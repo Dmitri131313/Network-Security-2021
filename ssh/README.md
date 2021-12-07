@@ -15,9 +15,9 @@ PORT      STATE  SERVICE     VERSION
 ```
 
 Questa volta purtroppo non possiamo fare affidamento sul sito [exploit-db.com](exploit-db.com) poiché anche se cercassimo questa versione di OpenSSH non troveremmo nulla, quindi cosa possiamo fare? Prima di tutto sappiamo che l'autenticazione attraverso SSH è possibile in tre vie:
-  1) Publickey, dove si utilizzano chiave pubblica e privata
-  2) Password, si invia la password in chiaro ma protetta dal Transport Layer Protocol
-  3) Hostbased, dove si verifica l'identità dell'host più che quella dell'utente.
+  1) __Publickey__, dove si utilizzano chiave pubblica e privata
+  2) __Password__, si invia la password in chiaro ma protetta dal Transport Layer Protocol
+  3) __Hostbased__, dove si verifica l'identità dell'host più che quella dell'utente.
 
 Molto spesso il problema di questa configurazione è che __l’user__ e la __password__ sono sempre uguali. In genere per SSH si cerca sempre di effettuare __attacchi a dizionario__ o a __forza bruta__, ovviamente questa cosa possiamo farla  in metasploit. Lanciamo nuovamente il tool con il comando:
 use auxiliary/scanner/ssh/ssh_login
@@ -106,6 +106,6 @@ Una volta ottenuti username e password non ci resta che tentare l'accesso tramit
 
 <img src="/imgs/ssh_exploit_compiuto.png" width="800"> </br>
 
-NOTA: Quando ci viene richiesto di verificare il server al primo collegamento operiamo out of band quindi con meccanismi che non sono SSH e ci viene chiesto se vogliamo aggiungere questo indirizzo tra gli host conosciuti.
+__NOTA__: Quando ci viene richiesto di verificare il server al primo collegamento operiamo out of band quindi con meccanismi che non sono SSH e ci viene chiesto se vogliamo aggiungere questo indirizzo tra gli host conosciuti.
 
 Una buona pratica per il protocollo SSH è quello di settare tutto il protocollo, inizialmente con username e password, poi successivamente disabilitare questa politica d'accesso e usare l'accesso tramite scambio di chiavi pubblica-privata.
