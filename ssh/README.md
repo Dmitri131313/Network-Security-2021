@@ -40,8 +40,8 @@ Interact with a module by name or index. For example info 1, use 1 or use auxili
 Come si vede la ricerca ha avuto esito positivo, sono stati trovati ben due moduli. Il primo modulo non solo testa un insieme di credenziali classiche per quel tipo di indirizzi IP ma può anche tentare un approccio brute force; perfetto per i nostri scopi.
 Il secondo modulo invece tenta l'approccio attraverso l'autenticazione a chiave pubblica __sapendo che questo metodo è più sicuro__ come opera il modulo? Quello che cerca di fare è scovare una porzione della chiave privata che non sia stata conservata a dovere e provare ad effettuare il login verso diversi dispositivi cercando la combinazione corretta.
 
-~~Visto che abbiamo con noi due file chiamati __users.txt__ e __passwords.txt__ tentiamo il primo approccio.~~</br>
-Da dove li abbiamo cacciati? lol.
+Nella cartella del Git troviamo due file chiamati __users.txt__ e __passwords.txt__ che contengono delle entry date dai nomi utenti e password più comuni e conosciuti. Tentiamo il primo approccio.
+
 
 ```
 msf6 > use 0
