@@ -4,3 +4,5 @@ Gli attacchi a questo protocollo sono i più disparati vanno dal bypass dell'aut
 
 Vedremo adesso come sarebbe possibile accedere alla macchina metasploitable2 attraverso varie strade:
 La più semplice consiste nel fare proprio il footprinting del servizio, quindi per prima cosa colleghiamoci ad esso attraverso un browser
+
+<img src="/imgs/HTTP_grabbing.png" width="1000"> </br>
