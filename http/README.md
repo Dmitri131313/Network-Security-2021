@@ -1,1 +1,6 @@
-Hello, world
+L'HyperText Transfer Protocol (HTTP) è un protocollo a livello applicativo usato per la trasmissione d'informazioni sul web. Un server HTTP generalmente resta in ascolto delle richieste dei client sulla porta 80 usando il protocollo TCP a livello di trasporto; mentre sulla porta 443 si usa il più ben noto HTTP, la differenza sta nell'uso di un protocollo di crittografia attraverso TLS.
+
+Gli attacchi a questo protocollo sono i più disparati vanno dal bypass dell'autenticazione dal lato client, fino al XSS (cross site scripting).
+
+Vedremo adesso come sarebbe possibile accedere alla macchina metasploitable2 attraverso varie strade:
+La più semplice consiste nel fare proprio il footprinting del servizio, quindi per prima cosa colleghiamoci ad esso attraverso un browser
