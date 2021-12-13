@@ -2,7 +2,7 @@ L'HyperText Transfer Protocol (HTTP) è un protocollo a livello applicativo usat
 
 Gli attacchi a questo protocollo sono i più disparati vanno dal bypass dell'autenticazione dal lato client, fino al XSS (cross site scripting).
 
-- [PostgreSQL](PostreSQL\)
-- [Slowloris](Slowloris\)
-- [PHP](php_cgi_arg_injection\)
+- [PostgreSQL](PostreSQL/)
+- [Slowloris](Slowloris/)
+- [PHP](php_cgi_arg_injection/)
 
