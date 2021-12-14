@@ -16,7 +16,7 @@ Possiamo accedere al nostro web server, che si trova sulla macchina metasploitab
 
 Di seguito, l'interfaccia di DVMA:
 
-<img src="/imgs/DVMA.PNG" width="600"> </br>
+<img src="/imgs/DVWA.PNG" width="600"> </br>
 
 
 Procediamo quindi all'attacco tramite metasploit.
