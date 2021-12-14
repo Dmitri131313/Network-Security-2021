@@ -12,11 +12,11 @@ In particolare, tale attacco cerca di mantenere quante più connessioni attive v
 
 Possiamo accedere al nostro web server, che si trova sulla macchina metasploitable2, da un browser di ricerca e digitando l'indirizzo IP, da qui apriamo una pagina della Damn Vulnerable Web Application (DVWA). Tale web server sarà available e responsivo. 
 
-<img src="/imgs/WebServer1.png" width="600"> </br>
+<img src="/imgs/WebServer1.PNG" width="600"> </br>
 
-Di seguito, l'interfacci di DVMA:
+Di seguito, l'interfaccia di DVMA:
 
-<img src="/imgs/DVMA.png" width="600"> </br>
+<img src="/imgs/DVMA.PNG" width="600"> </br>
 
 
 Procediamo quindi all'attacco tramite metasploit.
