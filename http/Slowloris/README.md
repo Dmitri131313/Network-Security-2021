@@ -19,7 +19,7 @@ Di seguito, l'interfaccia di DVMA:
 <img src="/imgs/DVWA.PNG" width="600"> </br>
 
 
-Procediamo ora all'attacco tramite metasploit. Avviata la msfconsole ricerchiamo un modulo built in per l'attacco slowloris digitando il conmando `search slowloris`.
+Procediamo ora all'attacco tramite metasploit. Avviata la msfconsole ricerchiamo un modulo built in per l'attacco slowloris digitando il comando `search slowloris`.
 
 ```
 Matching Modules
