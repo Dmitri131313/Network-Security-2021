@@ -100,7 +100,7 @@ Una volta interrotto l'attacco la web application tornerà available e responsiv
 
 Per mitigare gli effetti di un attacco di tipo Slowloris o evitarli del tutto è possibile attuare una serie di strategie. 
 
-Una soluzione completa può essere quella di utilizzare un hardware load balancer che accetti solo conessioni http complete e dunque andando a configurare un load balancer possiamo del tutto evitare delle richieste http incomplete come quelle messe in atto da slowloris.
+Una soluzione completa può essere quella di utilizzare un hardware load balancer che accetti solo connessioni http complete e dunque andando a configurare un load balancer possiamo del tutto evitare delle richieste http incomplete come quelle messe in atto da slowloris.
 
 Secondariamente, è possibile, tramite IPtables limitare le conessioni che provengono da un host particolare.
 
