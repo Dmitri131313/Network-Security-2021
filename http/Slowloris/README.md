@@ -4,7 +4,7 @@ Introduciamo in questa sezione un particolare attacco di tipo Denial of Service 
 
 Un Denial of Service indica un attacco in cui si vanno ad esaurire le risorse di un sistema informatico che fornisce un servizio fino a renderlo completamente inutilizzabile dai client. Dunque, tale tipologia di attacco va a minare l'availability di un servizio. 
 
-Una metodologia standard per andare ad intaccare l'availability di un web server con un attacco DoS è aprire quante più richieste e possibile verso di esso che andranno così a consumare tutte le risorse fino a rendere il server non più accessibile. 
+Una metodologia standard per andare ad intaccare l'availability di un web server con un attacco DoS è aprire quante più richieste possibili verso di esso che andranno così a consumare tutte le risorse fino a rendere il server non più accessibile. 
 
 Lo slowloris effettua un DoS in modo leggermente diverso, esso va a minare l'availability di un server utilizzando delle richieste http che sono appunto lente. 
 
